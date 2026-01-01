@@ -1,0 +1,150 @@
+📚 All API Endpoints (Complete & Accurate)
+
+Below are every endpoint detected from all 7 controllers using full extraction.
+
+🔹 1. AuthController (Registration & Login)
+Admin Registration
+
+POST /api/auth/admin/register-admin
+
+Student Registration
+
+POST /api/auth/student/register
+
+Faculty Registration
+
+POST /api/auth/faculty/register
+
+HOD Registration
+
+POST /api/auth/hod/register
+
+Login
+
+POST /api/auth/login
+
+🔹 2. StudentController
+Create Student
+
+POST /api/student/create
+
+Get All Students
+
+GET /api/student/all
+
+Get Student by ID
+
+GET /api/student/{id}
+
+Update Student
+
+PUT /api/student/update/{id}
+
+Delete Student
+
+DELETE /api/student/delete/{id}
+
+Filter by Branch & Section
+
+GET /api/student/filter?branch=CSE&section=A
+
+Get Students by Class Teacher
+
+GET /api/student/class-teacher/{facultyId}
+
+Get Student Count
+
+GET /api/student/count
+
+🔹 3. FacultyController
+Register Faculty
+
+POST /api/faculty/create
+
+Get All Faculty
+
+GET /api/faculty/all
+
+Get Faculty by ID
+
+GET /api/faculty/{id}
+
+Update Faculty
+
+PUT /api/faculty/update/{id}
+
+Delete Faculty
+
+DELETE /api/faculty/delete/{id}
+
+Get Faculty by Branch
+
+GET /api/faculty/branch/{branch}
+
+🔹 4. ClassTeacherController
+Assign Class Teacher to Branch + Section
+
+POST /api/class-teacher/assign
+
+Get Class Teacher for a Class
+
+GET /api/class-teacher/{branch}/{section}
+
+Get All Class Teachers
+
+GET /api/class-teachers
+
+🔹 5. SubjectTeacherController
+Assign Subject Teacher
+
+POST /api/subject-teacher/assign
+
+Get All Subject Teachers
+
+GET /api/subject-teachers
+
+Get Subject Teacher by ID
+
+GET /api/subject-teacher/{id}
+
+Update Subject Teacher
+
+PUT /api/subject-teacher/update/{id}
+
+Delete Subject Teacher
+
+DELETE /api/delete/subject-teacher/{id}
+
+Get Subjects Assigned to the Logged-In Faculty
+
+GET /api/my-subject-teachers
+
+🔹 6. HODController
+Register HOD
+
+POST /api/hod/create
+
+Get All HODs
+
+GET /api/hod/get-all-hods
+
+Get HOD by Branch
+
+GET /api/hod/branch/{branch}
+
+🔹 7. NotificationController
+Create Notification
+
+POST /api/notifications/create
+
+Get All Notifications
+
+GET /api/notifications/all
+
+Get Notifications for a Specific Branch
+
+GET /api/notifications/branch/{branch}
+
+Delete Notification
+
+DELETE /api/notifications/delete/{id}
