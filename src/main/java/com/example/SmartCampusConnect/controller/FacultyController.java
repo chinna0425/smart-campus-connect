@@ -1,10 +1,8 @@
 package com.example.SmartCampusConnect.controller;
 
-import com.example.SmartCampusConnect.dtos.facultyDto.FacultyActionRequest;
 import com.example.SmartCampusConnect.dtos.facultyDto.FacultyUpdateRequest;
 import com.example.SmartCampusConnect.model.UserDetailsImpl;
 import com.example.SmartCampusConnect.service.FacultyService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,7 @@ public class FacultyController {
     private FacultyService facultyService;
 
     @GetMapping("/faculty/getAllFaculties")
-    @PreAuthorize("hasRole('HOD')")
+    @PreAuthorize("hasRole('HOD','ADMIN')")
     public ResponseEntity<?> getAllFaculty(){
         Long currentId=currentUserId();
         return ResponseEntity.status(HttpStatus.OK).body(facultyService.getAllFacultyDetails(currentId));
@@ -34,7 +32,7 @@ public class FacultyController {
     }
 
     @GetMapping("/faculty/{id}")
-    @PreAuthorize("hasAnyRole('HOD')")
+    @PreAuthorize("hasAnyRole('HOD','ADMIN')")
     public ResponseEntity<?> getFacultyById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(facultyService.getFacultyById(id));
     }

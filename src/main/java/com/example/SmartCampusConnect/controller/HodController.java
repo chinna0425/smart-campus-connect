@@ -40,6 +40,7 @@ public class HodController {
     private FacultyService facultyService;
 
     //  Getting all Hods
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allHods")
     public ResponseEntity<?> getAllHods(){
         return ResponseEntity.status(HttpStatus.OK).body(hodService.getAllHods());

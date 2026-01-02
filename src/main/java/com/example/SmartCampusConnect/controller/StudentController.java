@@ -29,13 +29,13 @@ public class StudentController {
     private SubjectTeacherService subjectTeacherService;
 
     @GetMapping("/student/getAllStudents")
-    @PreAuthorize("hasAnyRole('FACULTY','HOD')")
+    @PreAuthorize("hasAnyRole('FACULTY','HOD','ADMIN')")
     public ResponseEntity<?> getAllStudents() {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     @GetMapping("/student/{id}")
-    @PreAuthorize("hasAnyRole('FACULTY','HOD')") // FIXED
+    @PreAuthorize("hasAnyRole('FACULTY','HOD','ADMIN')") // FIXED
     public ResponseEntity<?> getStudentById(@PathVariable Long id) throws AccessDeniedException {
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
