@@ -45,19 +45,42 @@ public class StudentService {
     @Autowired
     private HodJpaRepo hodJpaRepo;
 
-    public List<StudentResponse> getAllStudents() {
-        //  RBAC filtering — only showing students allowed for user
-        List<Student> allStudents = studentJpaRepo.findAll();
-        List<StudentResponse> finalList = new ArrayList<>();
+    private String normalize(String value) {
+        return value == null ? null : value.trim().toUpperCase();
+    }
 
-        for (Student student : allStudents) {
+    public List<StudentResponse> getAllStudents(Long currentUserId,String rollNumber, String branch, String section, Integer year) {
+        //  RBAC filtering — only showing students allowed for user
+
+        User user = userJpaRepo.findById(currentUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (rollNumber != null && !rollNumber.isBlank()) {
+
+            Student student = studentJpaRepo.findByRollNumber(normalize(rollNumber))
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
             try {
-                access.requireStudentViewAccess(student);
-                finalList.add(toStudentResponseDto(student));
+                access.requireStudentAccessForHodAndCTAndStudent(student);
+            } catch (Exception ignored) {}
+
+            return List.of(toStudentResponseDto(student));
+        }
+        List<Student> students = studentJpaRepo.filterStudents(normalize(rollNumber), normalize(branch), normalize(section), year);
+
+        if (students.isEmpty()) {
+            throw new ResourceNotFoundException("No students found");
+        }
+
+        List<StudentResponse> responseList=new ArrayList<>();
+        for(Student student:students){
+            try {
+                access.requireStudentAccessForHodAndCTAndStudent(student);
+                responseList.add(toStudentResponseDto(student));
             } catch (Exception ignored) {}
         }
 
-        return finalList;
+        return responseList;
     }
 
     public StudentResponse getStudentProfile(Long studentId) {
@@ -70,7 +93,7 @@ public class StudentService {
         Student student = studentJpaRepo.findByStudentId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found with id " + id));
 
-        access.requireStudentViewAccess(student); // RBAC check added
+        access.requireStudentViewAccessForCTAndHodAndSTAndAdmin(student); // RBAC check added
 
         return toStudentResponseDto(student);
     }
@@ -84,7 +107,7 @@ public class StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
         // RBAC check — Only ClassTeacher/HOD of that class
-        access.requireStudentAccessForHodAndCT(student);
+        access.requireStudentViewAccessForCTAndHodAndSTAndAdmin(student);
 
         // updating fields
         if (dto.getName() != null && !dto.getName().isBlank()) student.setName(WordUtils.capitalizeFully(dto.getName().trim()));

@@ -27,6 +27,9 @@ public class AccessControlService {
     @Autowired
     private FacultyJpaRepo facultyJpaRepo;
 
+    @Autowired
+    private AdminJpaRepo adminJpaRepo;
+
     private Long currentUserId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -107,6 +110,32 @@ public class AccessControlService {
         if (isHodOf(student)) return;
 
         throw new AccessDeniedException("You are not allowed to view this student");
+    }
+    public void requireStudentViewAccessForCTAndHodAndSTAndAdmin(Student student) throws AccessDeniedException {
+
+        if(isAdmin(student)) return;
+        if (isClassTeacherOf(student)) return;
+
+        if (isSubjectTeacherOfClass(student)) return;
+
+        if (isHodOf(student)) return;
+
+        throw new AccessDeniedException("You are not allowed to view this student");
+    }
+
+    private boolean isAdmin(Student student) {
+        Long currentId = currentUserId();
+
+        System.out.println(currentId);
+        User user = userJpaRepo.findById(currentId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!user.getRole().equals(Role.ADMIN)) return false;
+
+        Admin admin = adminJpaRepo.findById(currentId).orElse(null);
+
+        if (admin == null) return false;
+        return true;
     }
 
     public void requireStudentAccessForHodAndCT(Student student) throws AccessDeniedException {
